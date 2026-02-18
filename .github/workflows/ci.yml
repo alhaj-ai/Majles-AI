@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-backend:
+    name: FastAPI & RAG Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install Test Dependencies
+        run: pip install fastapi "pydantic[email]" pydantic-settings email-validator sqlalchemy passlib python-jose pyjwt bcrypt python-multipart httpx pytest numpy ollama google-genai
+      - name: Run Pytest Suite
+        env:
+          PYTHONPATH: .
+        run: pytest -v tests/test_api.py
